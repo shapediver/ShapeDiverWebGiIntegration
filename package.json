@@ -16,7 +16,7 @@
     "webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-0.9.0.tgz"
   },
   "dependencies": {
-    "@shapediver/viewer.session": "2.13.0-rc.5"
+    "@shapediver/viewer.session": "3.0.2"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"
