@@ -3,6 +3,13 @@ import { Object3D, Mesh, MeshStandardMaterial2, ViewerApp, ISceneObject } from "
 
 const loadedOutputs: { [key: string]: ISceneObject[] } = {};
 
+const materialLibrary: { [key: string]: MeshStandardMaterial2 } = {
+    "head.metal": new MeshStandardMaterial2({ color: "red" }),
+    "head.stone": new MeshStandardMaterial2({ color: "green" }),
+    "shank.metal": new MeshStandardMaterial2({ color: "blue" }),
+    "shank.engraving": new MeshStandardMaterial2({ color: "yellow" }),
+}
+
 /**
  * This handler will be called by SessionManager
  * whenever the contents of an output change.
@@ -140,18 +147,17 @@ export const outputUpdateHandler = async (
                     loadedOutputs[output.id] = assets;
 
                     /**
-                     * In the example model the material "material_to_replace" is used on the shelf, but not on the ground plane image.
-                     */
-                    const nameToReplace = "material_to_replace";
-                    /**
                      * Apply a default material to every object with a material that fits a specific name.
                      */
                     for (const asset of assets) {
                         if (asset.assetType === "model") {
                             (asset.modelObject as Object3D).traverseVisible((obj) => {
                                 if (obj instanceof Mesh) {
-                                    if (obj.material.name === nameToReplace) {
-                                        obj.material = new MeshStandardMaterial2({ color: "violet" });
+                                    // Check if the object has a material with a specific name.
+                                    if (materialLibrary[obj.material.name]) {
+                                        obj.material = materialLibrary[obj.material.name];
+                                    } else {
+                                        obj.material = new MeshStandardMaterial2({ color: "orange" });
                                     }
                                 }
                             });
