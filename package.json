@@ -4,19 +4,17 @@
   "description": "ShapeDiver + WebGi example starter project",
   "main": "index.html",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "start": "vite --port 3000",
+    "build": "vite build"
   },
   "devDependencies": {
-    "@types/webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-types-0.9.0.tgz",
+    "@types/webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-types-0.9.13.tgz",
     "typescript": "^5.1.3",
     "vite": "^4.3.9",
-    "vite-plugin-static-copy": "^0.16.0",
-    "webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-0.9.0.tgz"
+    "webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-0.9.13.tgz"
   },
   "dependencies": {
-    "@shapediver/viewer.session": "3.1.0"
+    "@shapediver/viewer.session": "3.2.7"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

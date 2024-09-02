@@ -1,6 +1,10 @@
 body {
   font-family: sans-serif;
   overflow: hidden;
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
 }
 #webgi-canvas {
   width: 100%;
@@ -14,4 +18,7 @@ body {
   border-radius: 0.5rem;
 
   box-shadow: rgba(0, 0, 0, 0.25) 0px 25px 50px -12px;
+}
+#tweakpaneUiContainer{
+  top: 2rem !important;
 }
