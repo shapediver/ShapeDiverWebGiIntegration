@@ -1,10 +1,10 @@
-import { IParameterApi, ISessionApi, PARAMETER_TYPE } from "@shapediver/viewer.session";
+import { ISessionApi, PARAMETER_TYPE } from "@shapediver/viewer.session";
 import type { IUiConfigContainer, UiObjectConfig } from "webgi";
 
 /**
- * Uses the parameters of the session API to create an UI
- *
- * onchange listeners are connected to the provided callback
+ * Uses the parameters of the session API to create an UI.
+ * 
+ * This example code is only used for demonstration purposes and should be replaced with a more sophisticated UI.
  */
 export class ParameterUI implements IUiConfigContainer {
   // #region Properties (2)

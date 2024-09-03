@@ -4,7 +4,7 @@
   "description": "ShapeDiver + WebGi example starter project",
   "main": "index.html",
   "scripts": {
-    "start": "vite --port 3000",
+    "start": "vite",
     "build": "vite build"
   },
   "devDependencies": {
