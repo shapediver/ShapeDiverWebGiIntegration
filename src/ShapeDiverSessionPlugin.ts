@@ -6,6 +6,7 @@ import { staticMaterialDatabase } from "./staticMaterialDatabase";
  * The ShapeDiver session plugin
  * 
  * This plugin is used to create a session with the ShapeDiver API.
+ * The provided session creation definition is used to create the session. You can find more information about the session creation definition here: https://viewer.shapediver.com/v3/latest/api/modules.html#SessionCreationDefinition
  * It also loads the glb content from the session and applies the materials to the models.
  */
 export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
@@ -61,8 +62,10 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
      * Then create the callbacks for the MaterialDatabase output and the session update.
      */
     public async init(): Promise<void> {
+        // You can find the API documentation for the session creation here: https://viewer.shapediver.com/v3/latest/api/modules.html#createSession
         this._session = await createSession(this._sessionCreationDefinition);
 
+        // Get the output of the MaterialDatabase, if it exists
         const materialDatabaseOutput = this._session.getOutputByName('MaterialDatabase')[0];
 
         /**
@@ -80,13 +83,16 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
                 this._loadedOutputVersions = {};
             }
 
+            // more information about the updateCallback can be found here: https://viewer.shapediver.com/v3/latest/api/interfaces/IOutputApi.html#updateCallback
             materialDatabaseOutput.updateCallback = cb;
+            // call the callback once to initialize the dynamicMaterialDatabase
             cb(materialDatabaseOutput.node);
         }
 
         /**
          * Create a callback that is called when the session is updated.
          * This callback is called when the session is updated.
+         * More information about the updateCallback can be found here: https://viewer.shapediver.com/v3/latest/api/interfaces/ISessionApi.html#updateCallback
          */
         this._session.updateCallback = (newNode?: ITreeNode) => {
             if (!newNode || !this._session) return;
@@ -117,12 +123,22 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
             }
 
         };
+        // call the callback once to initialize the models
         this._session.updateCallback(this._session.node, this._session.node);
 
+        // enable the plugin once the session is created
         this._enabled = true;
     }
 
+    /**
+     * The onRemove method is called when the plugin is removed from the viewer.
+     * In this case, the session is closed.
+     * 
+     * @param v The viewer
+     * @returns 
+     */
     public async onRemove(v: ViewerApp): Promise<void> {
+        // close the session when the plugin is removed
         await this._session?.close();
 
         return super.onRemove(v);
