@@ -19,8 +19,13 @@ const setup = async () => {
         canvas: document.getElementById('webgi-canvas') as HTMLCanvasElement,
     })
     await viewer.initialize({});
+
     viewer.getPlugin(LoadingScreenPlugin)!.showFileNames = false;
     viewer.setEnvironmentMap("https://demo-assets.pixotronics.com/pixo/hdr/gem_2.hdr");
+
+    // Optionally you can also load a complete scene with the following line
+    // The scene can be created and downloaded in the https://playground.ijewel3d.com/
+    // await viewer.load(PATH_TO_SCENE);
 
     // Add the ShapeDiverSessionPlugin, which creates a session with the ShapeDiver API
     const shapeDiverSessionPlugin = await viewer.addPlugin(new ShapeDiverSessionPlugin({
@@ -43,6 +48,10 @@ const setup = async () => {
     // Add the UI to the viewer
     const uiPlugin = await viewer.addPlugin(new TweakpaneUiPlugin(!isMobile));
     uiPlugin.appendUiObject(paramsUi);
+
+    // There are many other plugins that can be added to the viewer. Here is some documentation on them:
+    // - https://webgi.xyz/docs/manual/viewer-api#add-plugins
+    // - https://webgi.xyz/docs/features
 }
 
 setup()
