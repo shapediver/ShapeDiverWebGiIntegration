@@ -71,6 +71,8 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
         /**
          * If the MaterialDatabase output is found, create a callback that updates the dynamicMaterialDatabase.
          * This callback is called when the MaterialDatabase output is updated.
+         * 
+         * As the output callbacks are always called before the session update callback, the dynamicMaterialDatabase is updated before the models are updated.
          */
         if (materialDatabaseOutput) {
             const cb = (newNode?: ITreeNode) => {
@@ -169,7 +171,7 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
             // check if the material name is in the dynamic material database
             for (const key in this._dynamicMaterialDatabase) {
                 if (child.material.name === key) {
-                    this.createMaterialFromDefinition(viewer, child, this._dynamicMaterialDatabase[key]);
+                    this.createMaterialFromDefinition(viewer, child, JSON.parse(this._dynamicMaterialDatabase[key] as string));
                     return;
                 }
             }
@@ -193,11 +195,13 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
      */
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private async createMaterialFromDefinition(viewer: ViewerApp, child: Mesh<any, any>, definition: any) {
-        const parsedDefinition = JSON.parse(definition);
-        if (parsedDefinition.type === 'DiamondMaterial') {
-            viewer.getPlugin(DiamondPlugin)!.makeDiamond(child.material, { cacheKey: child.material.name, normalMapRes: 512 }, parsedDefinition);
-        } else {
-            child.material = new MeshStandardMaterial2().fromJSON(parsedDefinition);
+        const materialType = definition.type;
+
+        if (materialType === 'DiamondMaterial') {
+            // Regarding the DiamondPlugin, please read more here: https://webgi.xyz/docs/industries/jewellery/index.html
+            viewer.getPlugin(DiamondPlugin)!.makeDiamond(child.material, { cacheKey: child.material.name, normalMapRes: 512 }, definition);
+        } else if (materialType === 'MeshStandardMaterial2') {
+            child.material = new MeshStandardMaterial2().fromJSON(definition);
         }
     }
 

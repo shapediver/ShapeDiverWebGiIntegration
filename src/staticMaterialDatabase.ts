@@ -4,28 +4,79 @@
  * 
  * This database contains the material definitions for the different materials that can be applied to the models.
  * This database is used to when no material in the dynamic material database is found.
+ * 
+ * Material definitions can be created by visiting the [iJewel3d playground](https://playground.ijewel3d.com/). 
+ * You can load a test model there and edit the materials (or assign new ones). 
+ * Once you are content, you can export the material as a JSON by clicking on `Download pmat` (or `Download dmat` for gem stones) on the right side of the UI while the object is selected. 
+ * If you store the material definition with the same name that the material of the geometry has, the new material definition will be assigned. 
  */
 export const staticMaterialDatabase: {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     [key: string]: any
 } = {
-    'stone': {
-        'name': 'zircon-yellow',
-        'uuid': '8515627c-c6b8-45dc-bff3-161fa400b991',
-        'color': 16579713,
-        'envMapIntensity': 1.3,
-        'dispersion': 0.018000000000000002,
+    'head.stone': {
+        'metadata': {
+            'version': 4.6,
+            'type': 'DiamondMaterial',
+            'generator': 'DiamondMaterial.toJSON'
+        },
+        'name': '4ab054b4-6fef-46d6-80c9-cf350e89e2a0',
+        'uuid': 'f3144d6f-7a0c-4219-9f7f-91e6cc580899',
+        'color': 3904722,
+        'envMapIntensity': 1,
+        'envMapIndex': 0,
+        'envMapRotationOffset': 0,
+        'dispersion': 0.0098,
         'squashFactor': 0.98,
         'geometryFactor': 0.5,
         'gammaFactor': 1,
-        'absorptionFactor': 1.3,
+        'absorptionFactor': 1.6,
         'reflectivity': 0.5,
-        'refractiveIndex': 1.98,
+        'refractiveIndex': 2.17,
         'rayBounces': 5,
-        'diamondOrientedEnvMap': 1,
+        'diamondOrientedEnvMap': 0,
         'boostFactors': {
-            'x': 1.3,
-            'y': 0.9,
+            'x': 1,
+            'y': 1,
+            'z': 1.2,
+            'isVector3': true
+        },
+        'transmission': 0,
+        'isDiamondMaterialParameters': true,
+        'type': 'DiamondMaterial',
+        'userData': {
+            'separateEnvMapIntensity': true,
+            'rootPath': 'https://playground.ijewel3d.com/assets/materials/gem/gem-sapphire-1.dmat',
+            'cloneId': '0_1',
+            'cloneCount': 0,
+            'uuid': 'f3144d6f-7a0c-4219-9f7f-91e6cc580899'
+        }
+    },
+    'shank.accentStones':
+    {
+        'metadata': {
+            'version': 4.6,
+            'type': 'DiamondMaterial',
+            'generator': 'DiamondMaterial.toJSON'
+        },
+        'name': '4ab054b4-6fef-46d6-80c9-cf350e89e2a0',
+        'uuid': 'a7d0ea13-217f-4d7d-afbf-e796fec08d94',
+        'color': 16777215,
+        'envMapIntensity': 1,
+        'envMapIndex': 0,
+        'envMapRotationOffset': 0,
+        'dispersion': 0.012,
+        'squashFactor': 0.98,
+        'geometryFactor': 0.5,
+        'gammaFactor': 1,
+        'absorptionFactor': 1,
+        'reflectivity': 0.5,
+        'refractiveIndex': 2.6,
+        'rayBounces': 5,
+        'diamondOrientedEnvMap': 0,
+        'boostFactors': {
+            'x': 1,
+            'y': 1,
             'z': 1,
             'isVector3': true
         },
@@ -34,23 +85,26 @@ export const staticMaterialDatabase: {
         'type': 'DiamondMaterial',
         'userData': {
             'separateEnvMapIntensity': true,
-            'uuid': '8515627c-c6b8-45dc-bff3-161fa400b991'
+            'rootPath': 'https://playground.ijewel3d.com/assets/materials/gem/gem-diamond-white1.dmat',
+            'cloneId': '0_1',
+            'cloneCount': 0,
+            'uuid': 'a7d0ea13-217f-4d7d-afbf-e796fec08d94'
         }
     },
-    'metal': {
+    'head.metal': {
         'metadata': {
             'version': 4.6,
             'type': 'Material',
             'generator': 'Material.toJSON'
         },
-        'uuid': 'b96fdc44-51a6-4c24-bc21-72fe2c83394c',
+        'uuid': '4cbfe0d0-631f-4c20-bae2-4ead8bfb4048',
         'type': 'MeshStandardMaterial2',
-        'name': 'scratch',
-        'color': 16034684,
-        'roughness': 0.26116099121163555,
-        'metalness': 0.9,
-        'sheen': 0.2723217056874157,
-        'sheenColor': 15651511,
+        'name': '4ab054b4-6fef-46d6-80c9-cf350e89e2a0',
+        'color': 12763843,
+        'roughness': 0,
+        'metalness': 1,
+        'sheen': 0,
+        'sheenColor': 0,
         'sheenRoughness': 1,
         'emissive': 0,
         'specularIntensity': 1,
@@ -65,9 +119,6 @@ export const staticMaterialDatabase: {
         ],
         'anisotropy': 0,
         'anisotropyRotation': 0,
-        'bumpMap': '044beed6-d489-4039-b1ae-39b64af1af2a',
-        'bumpScale': 0.009999999999999981,
-        'roughnessMap': '044beed6-d489-4039-b1ae-39b64af1af2a',
         'envMapIntensity': 1,
         'reflectivity': 0.49999999999999983,
         'transmission': 0,
@@ -89,64 +140,73 @@ export const staticMaterialDatabase: {
         'stencilZPass': 7680,
         'fog': false,
         'userData': {
-            '_triplanarMapping': {
-                'enable': true,
-                'scaleFactor': 0.58,
-                'blendFactor': 1,
-                'offsetFactor': 0
-            },
             'gltfExtensions': {},
-            '_9c0eb19a-863e-4e38-9c54-fdde7af5eb71_version': 1,
-            'cloneId': '0',
-            'cloneCount': 2,
-            'uuid': 'b96fdc44-51a6-4c24-bc21-72fe2c83394c'
+            'cloneId': '0_1_1',
+            '_6b1395aa-194b-4458-bd49-22ec4592cfc2_version': 1,
+            'cloneCount': 0,
+            'rootPath': 'https://playground.ijewel3d.com/assets/materials/metal/polished/metal-whitegold-polished.pmat',
+            'uuid': '4cbfe0d0-631f-4c20-bae2-4ead8bfb4048'
         },
-        'textures': [
-            {
-                'metadata': {
-                    'version': 4.6,
-                    'type': 'Texture',
-                    'generator': 'Texture.toJSON'
-                },
-                'uuid': '044beed6-d489-4039-b1ae-39b64af1af2a',
-                'name': '',
-                'image': 'df4b7c73-9b4c-4e14-aec9-4c908defea42',
-                'mapping': 300,
-                'channel': 0,
-                'repeat': [
-                    2,
-                    2
-                ],
-                'offset': [
-                    0,
-                    0
-                ],
-                'center': [
-                    0,
-                    0
-                ],
-                'rotation': 0,
-                'wrap': [
-                    1000,
-                    1000
-                ],
-                'format': 1023,
-                'internalFormat': null,
-                'type': 1009,
-                'colorSpace': 'srgb-linear',
-                'encoding': 3000,
-                'minFilter': 1008,
-                'magFilter': 1006,
-                'anisotropy': 1,
-                'flipY': false,
-                'generateMipmaps': true,
-                'premultiplyAlpha': false,
-                'unpackAlignment': 4,
-                'userData': {
-                    'rootPath': 'https://playground.ijewel3d.com/assets/maps/albedo/metal/scratch-3.jpg'
-                }
-            }
+        'textures': [],
+        'images': []
+    },
+    'shank.metal': {
+        'metadata': {
+            'version': 4.6,
+            'type': 'Material',
+            'generator': 'Material.toJSON'
+        },
+        'uuid': '4cbfe0d0-631f-4c20-bae2-4ead8bfb4048',
+        'type': 'MeshStandardMaterial2',
+        'name': '4ab054b4-6fef-46d6-80c9-cf350e89e2a0',
+        'color': 12763843,
+        'roughness': 0,
+        'metalness': 1,
+        'sheen': 0,
+        'sheenColor': 0,
+        'sheenRoughness': 1,
+        'emissive': 0,
+        'specularIntensity': 1,
+        'specularColor': 16777215,
+        'clearcoat': 0,
+        'clearcoatRoughness': 0,
+        'iridescence': 0,
+        'iridescenceIOR': 1.3,
+        'iridescenceThicknessRange': [
+            100,
+            400
         ],
+        'anisotropy': 0,
+        'anisotropyRotation': 0,
+        'envMapIntensity': 1,
+        'reflectivity': 0.49999999999999983,
+        'transmission': 0,
+        'thickness': 0,
+        'attenuationDistance': 0,
+        'attenuationColor': 16777215,
+        'side': 2,
+        'depthFunc': 3,
+        'depthTest': true,
+        'depthWrite': true,
+        'colorWrite': true,
+        'stencilWrite': false,
+        'stencilWriteMask': 255,
+        'stencilFunc': 519,
+        'stencilRef': 0,
+        'stencilFuncMask': 255,
+        'stencilFail': 7680,
+        'stencilZFail': 7680,
+        'stencilZPass': 7680,
+        'fog': false,
+        'userData': {
+            'gltfExtensions': {},
+            'cloneId': '0_1_1',
+            '_6b1395aa-194b-4458-bd49-22ec4592cfc2_version': 1,
+            'cloneCount': 0,
+            'rootPath': 'https://playground.ijewel3d.com/assets/materials/metal/polished/metal-whitegold-polished.pmat',
+            'uuid': '4cbfe0d0-631f-4c20-bae2-4ead8bfb4048'
+        },
+        'textures': [],
         'images': []
     }
 };

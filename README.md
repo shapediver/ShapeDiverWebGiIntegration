@@ -44,7 +44,7 @@ To define preset materials and allow for easy exchanges, a system for the assign
 2. If the name of a material within the loaded geometry matches an entry in the static database (defined within the code), the material from the static database is assigned. (If no material was found in step 1)
 3. If no materials are found in these databases, the material will be left untouched.
 
-Material definitions can be created by visiting the [iJewel3d playground](https://playground.ijewel3d.com/). You can load a test model there and assign edit the materials (or assign new ones). Once you are content, you can export the material as a JSON by clicking on `Download pmat` (or `Download dmat` for gem stones) on the right side of the UI while the object is selected. Then you can copy that material definition either into the Grasshopper file that is used, or in the static material definition. If you store the material definition with the same name that the material of the geometry has, the new material definition will be assigned. 
+Material definitions can be created by visiting the [iJewel3d playground](https://playground.ijewel3d.com/). You can load a test model there and edit the materials (or assign new ones). Once you are content, you can export the material as a JSON by clicking on `Download pmat` (or `Download dmat` for gem stones) on the right side of the UI while the object is selected. Then you can copy that material definition either into the Grasshopper file that is used, or in the static material definition. If you store the material definition with the same name that the material of the geometry has, the new material definition will be assigned. 
 
 ## Setup
 
