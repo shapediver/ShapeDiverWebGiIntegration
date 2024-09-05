@@ -49,6 +49,8 @@ const setup = async () => {
     // There are many other plugins that can be added to the viewer. Here is some documentation on them:
     // - https://webgi.xyz/docs/manual/plugins-basics
     // - https://webgi.xyz/docs/features
+    // Some plugins, like the DiamondPlugin, are already included in the viewer by default.
+    // You can read more about the diamond plugin here: https://webgi.xyz/docs/industries/jewellery/index.html
 };
 
 setup();
