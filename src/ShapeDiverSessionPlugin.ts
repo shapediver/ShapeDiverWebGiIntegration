@@ -1,6 +1,6 @@
-import { AViewerPlugin, DiamondPlugin, IModel, MaterialConfiguratorBasePlugin, MathUtils, Mesh, MeshStandardMaterial2, ViewerApp } from "webgi";
-import { createSession, ISessionApi, ITreeNode, SessionCreationDefinition, SessionOutputData, ShapeDiverResponseOutputContent } from "@shapediver/viewer.session";
-import { staticMaterialDatabase } from "./staticMaterialDatabase";
+import { AViewerPlugin, DiamondPlugin, IModel, MathUtils, Mesh, MeshStandardMaterial2, ViewerApp } from 'webgi';
+import { createSession, ISessionApi, ITreeNode, SessionCreationDefinition, SessionOutputData, ShapeDiverResponseOutputContent } from '@shapediver/viewer.session';
+import { staticMaterialDatabase } from './staticMaterialDatabase';
 
 /**
  * The ShapeDiver session plugin
@@ -20,7 +20,7 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
      * 
      * The contents of this database are updated by reading the MaterialDatabase output from the session (if there is one).
      */
-    private _dynamicMaterialDatabase: { [key: string]: any } = {};
+    private _dynamicMaterialDatabase: { [key: string]: unknown } = {};
     private _enabled = false;
     private _loadedOutputVersions: { [key: string]: string } = {};
     private _models: Record<string, IModel[][]> = {};
@@ -81,7 +81,7 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
 
                 // clear the loaded output versions so that the new material definitions are applied
                 this._loadedOutputVersions = {};
-            }
+            };
 
             // more information about the updateCallback can be found here: https://viewer.shapediver.com/v3/latest/api/interfaces/IOutputApi.html#updateCallback
             materialDatabaseOutput.updateCallback = cb;
@@ -112,8 +112,8 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
                 for (let i = 0; i < content.length; i++) {
                     const item = content[i];
                     switch (item.format) {
-                        case "gltf":
-                        case "glb":
+                        case 'gltf':
+                        case 'glb':
                             this.loadGlbContent(outputApi.name, outputApi.uid, item, i);
                     }
                 }
@@ -162,7 +162,8 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
     private applyMaterial(viewer: ViewerApp, ms: IModel) {
         // for every object in the model, check if it belongs to a defined material library
         // if it does, store it in the material library
-        ms.modelObject.traverse((child: any) => {
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        ms.modelObject.traverse((child: Mesh<any, any>) => {
             if (!child.material) return;
 
             // check if the material name is in the dynamic material database
@@ -190,10 +191,11 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
      * @param child The object
      * @param definition The material definition
      */
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private async createMaterialFromDefinition(viewer: ViewerApp, child: Mesh<any, any>, definition: any) {
         const parsedDefinition = JSON.parse(definition);
         if (parsedDefinition.type === 'DiamondMaterial') {
-            viewer.getPlugin(DiamondPlugin)!.makeDiamond(child.material, { cacheKey: child.material.name, normalMapRes: 512 }, parsedDefinition)
+            viewer.getPlugin(DiamondPlugin)!.makeDiamond(child.material, { cacheKey: child.material.name, normalMapRes: 512 }, parsedDefinition);
         } else {
             child.material = new MeshStandardMaterial2().fromJSON(parsedDefinition);
         }
@@ -224,7 +226,7 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
         const uid = outputUid || MathUtils.generateUUID();
 
         // load the model
-        const ms = await viewer.load(content.href + "#f" + index + ".glb", { autoScale: false, pseudoCenter: false })
+        const ms = await viewer.load(content.href + '#f' + index + '.glb', { autoScale: false, pseudoCenter: false });
         ms.name = outputName;
 
         // dispose the old model
