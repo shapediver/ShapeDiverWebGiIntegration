@@ -1,5 +1,5 @@
-import { AViewerPlugin, DiamondPlugin, IModel, MathUtils, Mesh, MeshStandardMaterial2, ViewerApp } from 'webgi';
-import { createSession, ISessionApi, ITreeNode, SessionCreationDefinition, SessionOutputData, ShapeDiverResponseOutputContent } from '@shapediver/viewer.session';
+import { AViewerPlugin, DiamondPlugin, IModel, LoadingScreenPlugin, MathUtils, Mesh, MeshStandardMaterial2, ViewerApp } from 'webgi';
+import { addListener, createSession, EventResponseMapping, EVENTTYPE_TASK, IEvent, ISessionApi, ITreeNode, removeListener, SessionCreationDefinition, SessionOutputData, ShapeDiverResponseOutputContent, TASK_TYPE } from '@shapediver/viewer.session';
 import { staticMaterialDatabase } from './staticMaterialDatabase';
 
 /**
@@ -10,7 +10,7 @@ import { staticMaterialDatabase } from './staticMaterialDatabase';
  * It also loads the glb content from the session and applies the materials to the models.
  */
 export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
-    // #region Properties (6)
+    // #region Properties (9)
 
     /**
      * The dynamic material database
@@ -22,13 +22,16 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
      */
     private _dynamicMaterialDatabase: { [key: string]: unknown } = {};
     private _enabled = false;
+    private _eventListenerTokenTaskCancel?: string;
+    private _eventListenerTokenTaskEnd?: string;
+    private _eventListenerTokenTaskStart?: string;
     private _loadedOutputVersions: { [key: string]: string } = {};
     private _models: Record<string, IModel[][]> = {};
     private _session?: ISessionApi;
 
     public static readonly PluginType = 'ShapeDiverSessionPlugin';
 
-    // #endregion Properties (6)
+    // #endregion Properties (9)
 
     // #region Constructors (1)
 
@@ -64,6 +67,29 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
     public async init(): Promise<void> {
         // You can find the API documentation for the session creation here: https://viewer.shapediver.com/v3/latest/api/modules.html#createSession
         this._session = await createSession(this._sessionCreationDefinition);
+
+        // To show the loading screen when the session customization task starts and hide it when the task ends
+        // we register event listeners for the TASK_START, TASK_END and TASK_CANCEL events.
+        // When the plugin is removed from the viewer, the event listeners are removed.
+        const viewer = this._viewer;
+        this._eventListenerTokenTaskStart = addListener(EVENTTYPE_TASK.TASK_START, (e: IEvent) => {
+            const event = e as EventResponseMapping[EVENTTYPE_TASK.TASK_START];
+            if(event.type === TASK_TYPE.SESSION_CUSTOMIZATION) {
+                viewer!.getPlugin(LoadingScreenPlugin)!.show();
+            }
+        });
+        this._eventListenerTokenTaskEnd = addListener(EVENTTYPE_TASK.TASK_END, (e: IEvent) => {
+            const event = e as EventResponseMapping[EVENTTYPE_TASK.TASK_END];
+            if(event.type === TASK_TYPE.SESSION_CUSTOMIZATION) {
+                viewer!.getPlugin(LoadingScreenPlugin)!.hide();
+            }
+        });
+        this._eventListenerTokenTaskCancel = addListener(EVENTTYPE_TASK.TASK_CANCEL, (e: IEvent) => {
+            const event = e as EventResponseMapping[EVENTTYPE_TASK.TASK_CANCEL];
+            if(event.type === TASK_TYPE.SESSION_CUSTOMIZATION) {
+                viewer!.getPlugin(LoadingScreenPlugin)!.hide();
+            }
+        });
 
         // Get the output of the MaterialDatabase, if it exists
         const materialDatabaseOutput = this._session.getOutputByName('MaterialDatabase')[0];
@@ -142,6 +168,11 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
     public async onRemove(v: ViewerApp): Promise<void> {
         // close the session when the plugin is removed
         await this._session?.close();
+
+        // remove the event listeners
+        this._eventListenerTokenTaskStart && removeListener(this._eventListenerTokenTaskStart);
+        this._eventListenerTokenTaskCancel && removeListener(this._eventListenerTokenTaskCancel);
+        this._eventListenerTokenTaskEnd && removeListener(this._eventListenerTokenTaskEnd);
 
         return super.onRemove(v);
     }
