@@ -1,9 +1,8 @@
 {
   "compilerOptions": {
-    "experimentalDecorators": true,
     "strict": true,
+    "baseUrl": "src",
     "module": "commonjs",
-    "jsx": "preserve",
     "esModuleInterop": true,
     "sourceMap": true,
     "allowJs": true,
@@ -11,7 +10,10 @@
       "es6",
       "dom"
     ],
-    "rootDir": "src",
-    "moduleResolution": "node"
-  }
+    "moduleResolution": "node",
+    "strictNullChecks": true,
+  },
+  "include": [
+    "src"
+  ]
 }
