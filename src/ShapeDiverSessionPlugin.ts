@@ -202,7 +202,9 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
             // check if the material name is in the dynamic material database
             for (const key in this._dynamicMaterialDatabase) {
                 if (child.material.name === key) {
-                    this.createMaterialFromDefinition(viewer, child, JSON.parse(this._dynamicMaterialDatabase[key] as string));
+                    const def = this._dynamicMaterialDatabase[key];
+                    const materialDefinition = typeof def === 'string' ? JSON.parse(def as string) : def;
+                    this.createMaterialFromDefinition(viewer, child, materialDefinition);
                     return;
                 }
             }
