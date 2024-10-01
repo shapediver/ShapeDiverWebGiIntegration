@@ -72,7 +72,7 @@ WebGi offers caching and optimization possibilities that support rendering model
 
 ## Limitations
 
-ShapeDiver's 3D Viewer offers [features](https://help.shapediver.com/doc/viewer) that are unavailable when using this integration. This includes the following features: 
+ShapeDiver's 3D Viewer offers [features](https://help.shapediver.com/doc/viewer) that are not yet available when using this integration. This includes the following features: 
 
   * Augmented reality
   * Interactions (Selection, hovering, dragging)
