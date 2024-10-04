@@ -3,6 +3,10 @@ import './styles.css';
 import { ShapeDiverSessionPlugin } from './ShapeDiverSessionPlugin';
 import { createUi } from '@shapediver/viewer.shared.demo-helper';
 
+const urlParams = new URLSearchParams(window.location.search);
+const TICKET = urlParams.get('ticket') || 'ee1622c04230a13e8632917d16834f2932ed3373e35a461e0a799b877d8e816f1db6168261d152536868ec651bc641e4eb5bd189520c7e9e6204e73f9b027173f09e8fdd87234380bdacb3240bb71ac8217e0e4c5924bb1dc6e75fcf5d0c76df47502202094bb4-5a7f2add154eb6589385a5718804ce39';
+const MODEL_VIEW_URL = urlParams.get('modelViewUrl') || 'https://sdr8euc1.eu-central-1.shapediver.com';
+
 /**
  * Setup the WebGi viewer and add all necessary plugins
  * 
@@ -30,9 +34,8 @@ const setup = async () => {
 
      // Add the ShapeDiverSessionPlugin, which creates a session with the ShapeDiver API
      const shapeDiverSessionPlugin = await viewer.addPlugin(new ShapeDiverSessionPlugin({
-        ticket:
-        'ee1622c04230a13e8632917d16834f2932ed3373e35a461e0a799b877d8e816f1db6168261d152536868ec651bc641e4eb5bd189520c7e9e6204e73f9b027173f09e8fdd87234380bdacb3240bb71ac8217e0e4c5924bb1dc6e75fcf5d0c76df47502202094bb4-5a7f2add154eb6589385a5718804ce39',
-        modelViewUrl: 'https://sdr8euc1.eu-central-1.shapediver.com',
+        ticket: TICKET,
+        modelViewUrl: MODEL_VIEW_URL,
     }));
 
     // Check if the device is a mobile device

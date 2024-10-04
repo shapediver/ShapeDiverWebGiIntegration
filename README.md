@@ -2,7 +2,11 @@
 
 This repository contains sample code for using the WebGi rendering engine with ShapeDiver. It serves as an example for creating 3D configurators based on the ShapeDiver geometry backend and the WebGi rendering engine. 
 
-You can see a deployed version of this example here: [https://shapediver.github.io/ShapeDiverWebGiIntegration/](https://shapediver.github.io/ShapeDiverWebGiIntegration/)
+You can see a deployed version of this example here: [https://shapediver.github.io/ShapeDiverWebGiIntegration/](https://shapediver.github.io/ShapeDiverWebGiIntegration/). 
+
+It's possible to test another ShapeDiver model by adding the following query parameters: 
+
+`https://shapediver.github.io/ShapeDiverWebGiIntegration/?ticket=YOUR_TICKET&modelViewUrl=YOUR_MODEL_VIEW_URL`
 
 Are you looking for support? Please check out your options for getting in touch with us [here](https://help.shapediver.com/doc/community-and-support). 
 
@@ -72,7 +76,7 @@ WebGi offers caching and optimization possibilities that support rendering model
 
 ## Limitations
 
-ShapeDiver's 3D Viewer offers [features](https://help.shapediver.com/doc/viewer) that are unavailable when using this integration. This includes the following features: 
+ShapeDiver's 3D Viewer offers [features](https://help.shapediver.com/doc/viewer) that are not yet available when using this integration. This includes the following features: 
 
   * Augmented reality
   * Interactions (Selection, hovering, dragging)
