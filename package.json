@@ -11,15 +11,15 @@
   "devDependencies": {
     "@typescript-eslint/parser": "^5.57.0",
     "@typescript-eslint/eslint-plugin":  "^5.57.0",
-    "@types/webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-types-0.9.13.tgz",
+    "@types/webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-types-0.9.19.tgz",
     "eslint": "^8.37.0",
     "typescript": "^5.5.4",
     "vite": "^5.4.3"
   },
   "dependencies": {
-    "@shapediver/viewer.session": "3.2.8",
-    "@shapediver/viewer.shared.demo-helper": "3.2.8",
-    "webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-0.9.13.tgz"
+    "@shapediver/viewer.session": "3.3.9",
+    "@shapediver/viewer.shared.demo-helper": "3.3.9",
+    "webgi": "https://storage.googleapis.com/dist.pixotronics.com/webgi/runtime/bundle-0.9.19.tgz"
   },
   "resolutions": {
     "@babel/preset-env": "7.13.8"

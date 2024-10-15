@@ -25,6 +25,7 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
     private _eventListenerTokenTaskCancel?: string;
     private _eventListenerTokenTaskEnd?: string;
     private _eventListenerTokenTaskStart?: string;
+    private _loadedMaterialOutputVersion?: string;
     private _loadedOutputVersions: { [key: string]: string } = {};
     private _models: Record<string, IModel[][]> = {};
     private _session?: ISessionApi;
@@ -91,32 +92,6 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
             }
         });
 
-        // Get the output of the MaterialDatabase, if it exists
-        const materialDatabaseOutput = this._session.getOutputByName('MaterialDatabase')[0];
-
-        /**
-         * If the MaterialDatabase output is found, create a callback that updates the dynamicMaterialDatabase.
-         * This callback is called when the MaterialDatabase output is updated.
-         * 
-         * As the output callbacks are always called before the session update callback, the dynamicMaterialDatabase is updated before the models are updated.
-         */
-        if (materialDatabaseOutput) {
-            const cb = (newNode?: ITreeNode) => {
-                if (!newNode) return;
-
-                // update the dynamic material database
-                this._dynamicMaterialDatabase = (newNode.data.find((d) => d instanceof SessionOutputData) as SessionOutputData).responseOutput.content?.[0].data;
-
-                // clear the loaded output versions so that the new material definitions are applied
-                this._loadedOutputVersions = {};
-            };
-
-            // more information about the updateCallback can be found here: https://viewer.shapediver.com/v3/latest/api/interfaces/IOutputApi.html#updateCallback
-            materialDatabaseOutput.updateCallback = cb;
-            // call the callback once to initialize the dynamicMaterialDatabase
-            cb(materialDatabaseOutput.node);
-        }
-
         /**
          * Create a callback that is called when the session is updated.
          * This callback is called when the session is updated.
@@ -125,7 +100,37 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
         this._session.updateCallback = (newNode?: ITreeNode) => {
             if (!newNode || !this._session) return;
 
-            // iterate over all outputs
+            // first, search for the MaterialDatabase output and update the dynamicMaterialDatabase
+            const materialDatabaseOutput = Object.keys(this._session.outputs).find((outputId) => {
+                const output = this._session!.outputs[outputId];
+                if (output.name === 'MaterialDatabase' || output.displayname === 'MaterialDatabase')
+                    return true;
+                return false;
+            });
+
+            /**
+             * If the MaterialDatabase output is found, create a callback that updates the dynamicMaterialDatabase.
+             * This callback is called when the MaterialDatabase output is updated.
+             */
+            if(materialDatabaseOutput) {
+                const outputApi = this._session.outputs[materialDatabaseOutput];
+
+                if(this._loadedMaterialOutputVersion !== outputApi.version) {
+                    // update the dynamic material database
+                    this._dynamicMaterialDatabase = (outputApi.node?.data.find((d) => d instanceof SessionOutputData) as SessionOutputData).responseOutput.content?.[0].data;
+    
+                    // clear the loaded output versions so that the new material definitions are applied
+                    this._loadedOutputVersions = {};
+    
+                    // store the version of the output
+                    this._loadedMaterialOutputVersion = outputApi.version;
+                }
+            }
+
+            // disable rendering while loading the model
+            if (this._viewer) this._viewer.renderEnabled = false;
+
+            // iterate over all other outputs
             for (const outputId in this._session.outputs) {
                 const outputApi = this._session.outputs[outputId];
 
@@ -149,6 +154,9 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
                 // store the version of the output
                 this._loadedOutputVersions[outputId] = outputApi.version;
             }
+
+            // enable rendering again
+            if (this._viewer) this._viewer.renderEnabled = true;
 
         };
         // call the callback once to initialize the models
@@ -192,7 +200,9 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
      * @param viewer The viewer
      * @param ms The model
      */
-    private applyMaterial(viewer: ViewerApp, ms: IModel) {
+    private async applyMaterial(viewer: ViewerApp, ms: IModel) {
+        const promises: Promise<void>[] = [];
+
         // for every object in the model, check if it belongs to a defined material library
         // if it does, store it in the material library
         // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -204,7 +214,7 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
                 if (child.material.name === key) {
                     const def = this._dynamicMaterialDatabase[key];
                     const materialDefinition = typeof def === 'string' ? JSON.parse(def as string) : def;
-                    this.createMaterialFromDefinition(viewer, child, materialDefinition);
+                    promises.push(this.createMaterialFromDefinition(viewer, child, materialDefinition));
                     return;
                 }
             }
@@ -212,11 +222,13 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
             // check if the material name is in the static material database
             for (const key in staticMaterialDatabase) {
                 if (child.material.name === key) {
-                    this.createMaterialFromDefinition(viewer, child, staticMaterialDatabase[key]);
+                    promises.push(this.createMaterialFromDefinition(viewer, child, staticMaterialDatabase[key]));
                     return;
                 }
             }
         });
+
+        await Promise.all(promises);
     }
 
     /**
@@ -232,9 +244,13 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
 
         if (materialType === 'DiamondMaterial') {
             // Regarding the DiamondPlugin, please read more here: https://webgi.xyz/docs/industries/jewellery/index.html
-            viewer.getPlugin(DiamondPlugin)!.makeDiamond(child.material, { cacheKey: child.material.name, normalMapRes: 512 }, definition);
+            const file = new File([JSON.stringify(definition)], child.material.name + '.dmat', { type: 'application/json', });
+            const material = await viewer.load({file: file, path: child.material.name + '.dmat'});
+            (child as any).setMaterial(material);
         } else if (materialType === 'MeshStandardMaterial2') {
-            child.material = new MeshStandardMaterial2().fromJSON(definition);
+            const file = new File([JSON.stringify(definition)], child.material.name + '.pmat', { type: 'application/json', });
+            const material = await viewer.load({file: file, path: child.material.name + '.pmat'});
+            (child as any).setMaterial(material);
         }
     }
 
@@ -277,7 +293,7 @@ export class ShapeDiverSessionPlugin extends AViewerPlugin<''> {
         this._models[uid][index] = [ms];
 
         // apply the material
-        this.applyMaterial(viewer, ms);
+        await this.applyMaterial(viewer, ms);
 
         return viewer.fitToView();
     }
