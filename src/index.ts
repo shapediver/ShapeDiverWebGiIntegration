@@ -1,4 +1,4 @@
-import { CoreViewerApp, LoadingScreenPlugin, mobileAndTabletCheck } from 'webgi';
+import { CoreViewerApp, DirectionalLight, LoadingScreenPlugin, mobileAndTabletCheck } from 'webgi';
 import './styles.css';
 import { ShapeDiverSessionPlugin } from './ShapeDiverSessionPlugin';
 import { createUi } from '@shapediver/viewer.shared.demo-helper';
@@ -27,6 +27,9 @@ const setup = async () => {
 
     viewer.getPlugin(LoadingScreenPlugin)!.showFileNames = false;
     viewer.setEnvironmentMap('https://demo-assets.pixotronics.com/pixo/hdr/gem_2.hdr');
+    const light = new DirectionalLight(0xffffff, 2.5);
+    light.position.set(1, 1, 1);
+    viewer.scene.add(light);
 
     // Optionally you can also load a complete scene with the following line
     // The scene can be created and downloaded in the https://playground.ijewel3d.com/
