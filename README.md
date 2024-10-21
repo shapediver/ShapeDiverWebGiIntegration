@@ -64,7 +64,7 @@ You can create WebGi material definitions by using the [iJewel3d playground](htt
 The static material database allows to define materials statically, as part of the web application. You can find an example in [staticMaterialDatabase.ts](src/staticMaterialDatabase.ts). The static material database is a dictionary mapping material names to WebGi material definitions.
 
 ### Dynamic material database
-Optionally you can define a dynamic material database using your Grasshopper model. An example can be found in this Grasshopper model: [materials-json-test.ghx](Grasshopper/materials-json-test.ghx). The dynamic material database is a JSON dictionary mapping material names to WebGi material definitions. 
+Optionally you can define a dynamic material database using your Grasshopper model. An example can be found in this Grasshopper model: [webgitextureexample.ghx](Grasshopper/webgitextureexample.ghx). The dynamic material database is a JSON dictionary mapping material names to WebGi material definitions. 
 
 
 ### Notes about rendering diamonds
